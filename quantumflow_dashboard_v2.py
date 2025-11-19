@@ -1,6 +1,6 @@
 """
-QuantumFlow AI Trading Intelligence Dashboard - November 18, 2025
-Real-time Market Analysis with AI Bubble Warning System
+QuantumFlow AI Trading Intelligence Dashboard - November 19, 2025
+Real-time inspired demo with AI Bubble / Magnificent 7 / Alternatives view
 """
 
 import streamlit as st
@@ -8,892 +8,378 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from datetime import datetime, timedelta
-import warnings
-warnings.filterwarnings('ignore')
+from datetime import datetime
 
-# Page Configuration
+# --------------------
+# PAGE CONFIG & STYLE
+# --------------------
 st.set_page_config(
-    page_title="QuantumFlow AI Trading Intelligence",
-    page_icon="🔮",
+    page_title="QuantumFlow – AI Trading CoPilot",
+    page_icon="💹",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Professional Design
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-    
-    /* Main Theme */
-    .stApp {
-        background: linear-gradient(135deg, #0a0e1a 0%, #1a1f3a 100%);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* Headers with Gradient */
-    .main-header {
-        background: linear-gradient(90deg, #00d4ff 0%, #0099ff 50%, #0066ff 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 3.5rem;
-        font-weight: 900;
-        text-align: center;
-        margin-bottom: 10px;
-        animation: pulse 3s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-    }
-    
-    .sub-header {
-        background: linear-gradient(90deg, #ff6b6b 0%, #ff8e53 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin: 20px 0;
-    }
-    
-    /* Alert Box */
-    .alert-box {
-        background: linear-gradient(135deg, rgba(255,59,48,0.15) 0%, rgba(255,45,85,0.15) 100%);
-        border: 2px solid #ff3b30;
-        border-radius: 15px;
+PRIMARY = "#1E3A8A"
+ACCENT = "#06B6D4"
+DANGER = "#FF3B30"
+SUCCESS = "#16A34A"
+BG_DARK = "#050816"
+
+st.markdown(
+    f"""
+    <style>
+    .main {{
+        background: radial-gradient(circle at top, #020617 0%, #020617 35%, #020617 100%);
+        color: #E5E7EB;
+    }}
+    .block-container {{
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }}
+    h1, h2, h3, h4 {{
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #E5E7EB;
+    }}
+    .metric-card {{
+        background: linear-gradient(145deg, #020617, #0B1120);
+        border-radius: 16px;
+        padding: 16px 18px;
+        border: 1px solid rgba(148,163,184,0.35);
+        box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+    }}
+    .alert-box {{
+        background: linear-gradient(135deg, rgba(255,59,48,0.18) 0%, rgba(255,45,85,0.18) 100%);
+        border: 1px solid rgba(248,113,113,0.95);
+        border-radius: 18px;
         padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 0 30px rgba(255,59,48,0.3);
-        animation: alertPulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes alertPulse {
-        0%, 100% { box-shadow: 0 0 30px rgba(255,59,48,0.3); }
-        50% { box-shadow: 0 0 50px rgba(255,59,48,0.5); }
-    }
-    
-    .alert-title {
-        color: #ff3b30;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-    
-    /* Metric Cards */
-    .metric-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 15px;
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 40px rgba(0,212,255,0.2);
-        border-color: rgba(0,212,255,0.3);
-    }
-    
-    /* Decision Box */
-    .decision-box {
-        background: linear-gradient(135deg, rgba(0,255,0,0.1) 0%, rgba(0,200,0,0.05) 100%);
-        border: 2px solid #00ff00;
-        border-radius: 20px;
-        padding: 25px;
-        margin: 30px 0;
-        text-align: center;
-        box-shadow: 0 0 50px rgba(0,255,0,0.2);
-    }
-    
-    .decision-text {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #00ff00;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    
-    /* Expert Cards */
-    .expert-card {
-        background: rgba(255,255,255,0.03);
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px 0;
-        border-left: 4px solid;
-        transition: all 0.3s ease;
-    }
-    
-    .expert-card:hover {
-        transform: translateX(5px);
-        background: rgba(255,255,255,0.05);
-    }
-    
-    /* Tables */
-    .dataframe {
-        background: rgba(255,255,255,0.05) !important;
-        border-radius: 10px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-    }
-    
-    .dataframe th {
-        background: rgba(0,150,255,0.2) !important;
-        color: white !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        font-size: 0.9rem !important;
-        letter-spacing: 1px !important;
-    }
-    
-    .dataframe td {
-        color: #e0e0e0 !important;
-        border-color: rgba(255,255,255,0.05) !important;
-    }
-    
-    /* Hide Streamlit Elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    .stDeployButton {display: none;}
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.05);
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #00a0ff 0%, #0055cc 100%);
-    }
-</style>
-""", unsafe_allow_html=True)
+        margin-top: 10px;
+        margin-bottom: 22px;
+        box-shadow: 0 0 35px rgba(248,113,113,0.28);
+        color: #FEE2E2;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-# Main Header
-st.markdown('<h1 class="main-header">🔮 QuantumFlow AI Trading Intelligence</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align: center; color: #888; font-size: 1.2rem; margin-bottom: 30px;">November 18, 2025 | Live Market Analysis | AI Bubble Warning Active</p>', unsafe_allow_html=True)
+# --------------------
+# SIDEBAR – USER PROFILE
+# --------------------
+st.sidebar.title("👤 Investor Profile")
 
-# Real Market Data - November 18, 2025
-market_data = {
-    'indices': {
-        'S&P 500': {'price': 6672.41, 'change': -61.72, 'change_pct': -0.92},
-        'Dow Jones': {'price': 46590.24, 'change': -557.24, 'change_pct': -1.18},
-        'Nasdaq': {'price': 22708.07, 'change': -192.51, 'change_pct': -0.84},
-        'VIX': {'price': 18.47, 'change': 2.14, 'change_pct': 13.00}
-    },
-    'stocks': {
-        'NVDA': {'price': 183.15, 'change': -3.52, 'change_pct': -1.88, 'pe': 55, 'market_cap': 4500},
-        'AAPL': {'price': 262.45, 'change': -4.87, 'change_pct': -1.82, 'pe': 31, 'market_cap': 4020},
-        'MSFT': {'price': 504.82, 'change': -2.67, 'change_pct': -0.53, 'pe': 36, 'market_cap': 3750},
-        'GOOGL': {'price': 291.35, 'change': 8.78, 'change_pct': 3.11, 'pe': 28, 'market_cap': 1850},
-        'META': {'price': 594.67, 'change': -7.34, 'change_pct': -1.22, 'pe': 24, 'market_cap': 1520},
-        'TSLA': {'price': 413.25, 'change': 4.63, 'change_pct': 1.13, 'pe': 89, 'market_cap': 1310},
-        'AMZN': {'price': 231.05, 'change': -1.82, 'change_pct': -0.78, 'pe': 42, 'market_cap': 2400}
-    },
-    'crypto': {
-        'BTC': {'price': 91855, 'change': -3145, 'change_pct': -3.31},
-        'ETH': {'price': 3003, 'change': -127, 'change_pct': -4.06}
-    }
-}
+risk_profile = st.sidebar.radio(
+    "Risk Profile",
+    options=["Conservative", "Moderate", "Aggressive"],
+    index=1,
+)
 
-# ============================================================================
-# CRITICAL ALERT: AI BUBBLE WARNING
-# ============================================================================
+capital = st.sidebar.number_input(
+    "Portfolio Size (USD)", min_value=5000, max_value=5_000_000, step=5000, value=100_000
+)
 
-st.markdown("""
-<div class="alert-box">
-    <div class="alert-title">🚨 CRITICAL MARKET ALERT: AI BUBBLE FEARS INTENSIFY</div>
-    <ul style="color: #ff9999; font-size: 1.1rem; line-height: 1.8;">
-        <li><strong>Google CEO Warning:</strong> Sundar Pichai states "no company is immune" if AI bubble bursts</li>
-        <li><strong>Major Exits:</strong> SoftBank sold entire 32M share NVDA position; Peter Thiel's fund completely exited</li>
-        <li><strong>Valuation Concerns:</strong> NVDA trading at 55x earnings, market questioning $500B in AI orders</li>
-        <li><strong>BofA Survey:</strong> AI bubble now ranked as #1 tail risk by fund managers</li>
-        <li><strong>Government Shutdown Impact:</strong> Longest shutdown in US history affecting economic data</li>
-    </ul>
-</div>
-""", unsafe_allow_html=True)
+focus_ai = st.sidebar.checkbox("Highlight AI / Magnificent 7 risk", value=True)
+focus_alt = st.sidebar.checkbox("Show Alternatives when Tech is Weak", value=True)
 
-# ============================================================================
-# MARKET OVERVIEW
-# ============================================================================
+st.sidebar.markdown("---")
+st.sidebar.markdown(
+    "🔍 **Demo Note:** Data is a realistic snapshot-style mock inspired by "
+    "today's market conditions around AI bubble fears, Nvidia earnings, "
+    "and flows into gold / commodities."
+)
 
-st.markdown('<h2 class="sub-header">📈 Live Market Overview</h2>', unsafe_allow_html=True)
+# --------------------
+# MOCK DATA (INSPIRED BY 19.11.2025)
+# --------------------
+today_str = "2025-11-19"
 
-col1, col2, col3, col4 = st.columns(4)
+# Market overview: indices + gold + oil
+market_overview = pd.DataFrame([
+    # price, daily %, ytd %, type, quantumflow view
+    ["S&P 500",      6617,  -0.8,  21.0, "Index",       "Risk-off drift ahead of NVDA earnings"],
+    ["Nasdaq 100",  24250, -1.2,  32.0, "Index",       "Tech-heavy, hit hardest by AI unwind"],
+    ["Magnificent 7 Index", -1, -1.0, 48.0, "Basket", "Crowded AI trade correcting, stress elevated"],
+    ["Gold (oz)",   4094,   0.6,  54.0, "Commodity",   "Safe-haven bid returns, benefiting from risk-off"],
+    ["WTI Crude",     57,  -0.4, -18.0, "Commodity",   "Bearish tone, oversupply fears into 2026"],
+],
+    columns=["Asset", "Level", "DailyChangePct", "YTD%", "Type", "Comment"]
+)
 
-with col1:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric(
-        "S&P 500",
-        f"{market_data['indices']['S&P 500']['price']:,.2f}",
-        f"{market_data['indices']['S&P 500']['change']:.2f} ({market_data['indices']['S&P 500']['change_pct']:.2f}%)"
+# For the Mag 7 table we'll use approximate demo values
+mag7_data = pd.DataFrame([
+    ["AAPL",  285,  -0.9,  28.0, "Reduce",   "Over-owned, modest downside risk as rates expectations reset"],
+    ["MSFT",  430,  -2.7,  46.0, "Hold",     "Still high quality; wait for clarity post NVDA & Fed minutes"],
+    ["NVDA",  181,  -2.8, 120.0, "Watch",    "High expectations into Q3 AI earnings; volatility expected"],
+    ["GOOGL", 284,  -0.3,  39.0, "Hold",     "Less exposed to pure AI bubble, but momentum cooling"],
+    ["AMZN",  168,  -4.4,  42.0, "Trim",     "E-commerce + AI infra; profit-taking and macro worries"],
+    ["META",  495,  -1.5,  65.0, "Reduce",   "High beta to risk sentiment, sentiment still bullish but fragile"],
+    ["TSLA",  210,  -3.1,  11.0, "High-Risk","EV + AI bet; momentum broken, only for aggressive risk"],
+],
+    columns=["Ticker", "Price", "Daily%", "YTD%", "QF_Action", "Narrative"]
+)
+
+# Alternative plays when tech is shaky
+alts_data = pd.DataFrame([
+    ["GLD",     "Gold ETF",         "Defensive / Safe-haven", "BUY",  7.0,  6.0, 12.0,
+     "Flows rotating from crowded AI names into gold as macro uncertainty rises."],
+    ["XLE",     "Energy Select",    "Energy / Oil & Gas",     "BUY",  5.0,  8.0, 15.0,
+     "Valuations reasonable vs growth; benefits if inflation and energy shocks reappear."],
+    ["XLU",     "Utilities",        "Defensive Yield",        "ACCUMULATE", 4.0, 4.0, 9.0,
+     "Lower volatility alternative to AI; income plus partial inflation hedge."],
+    ["SHY",     "Short-Term Treas.", "Cash-like / Rates",     "HOLD",  3.0,  0.0, 0.0,
+     "For de-risking portions of the portfolio while waiting for better entry in risk assets."],
+],
+    columns=["Ticker", "Name", "Theme", "QF_Signal", "SuggestedSize%", "StopLoss%", "TakeProfit%", "Rationale"]
+)
+
+# Example trade ideas
+trade_ideas = pd.DataFrame([
+    ["GLD",  "BUY",        "Defensive rotation from AI bubble risk",       0.08, 0.06, 0.12],
+    ["NVDA", "SPECULATE",  "Earnings catalyst – only for Aggressive risk", 0.03, 0.10, 0.20],
+    ["XLE",  "BUY",        "Energy lagged vs tech, attractive risk/reward", 0.06, 0.08, 0.15],
+    ["AAPL", "TRIM",       "Crowded mega-cap, partial profit-taking",      0.03, 0.05, 0.10],
+],
+    columns=["Ticker", "Action", "Reason", "PositionSize", "StopLoss%", "TakeProfit%"]
+)
+
+# Adjust sizing per risk profile
+risk_multiplier = {"Conservative": 0.6, "Moderate": 1.0, "Aggressive": 1.4}[risk_profile]
+trade_ideas["AdjPositionSize"] = (trade_ideas["PositionSize"] * risk_multiplier).round(3)
+
+# --------------------
+# HEADER
+# --------------------
+col_logo, col_title = st.columns([1, 5])
+with col_logo:
+    st.markdown("### 💠 QuantumFlow")
+    st.caption("AI-Powered Trading Intelligence for Real Investors")
+with col_title:
+    st.markdown(
+        f"""
+        <h1>Market Brain – Live Demo ({today_str})</h1>
+        <p style="color:#9CA3AF;">
+            AI bubble fears, Magnificent 7 pullback, Nvidia earnings on deck, and a renewed bid in gold.
+            QuantumFlow synthesizes it all into clear, risk-aware actions for your portfolio.
+        </p>
+        """,
+        unsafe_allow_html=True,
     )
-    st.markdown('</div>', unsafe_allow_html=True)
 
-with col2:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric(
-        "Dow Jones",
-        f"{market_data['indices']['Dow Jones']['price']:,.2f}",
-        f"{market_data['indices']['Dow Jones']['change']:.2f} ({market_data['indices']['Dow Jones']['change_pct']:.2f}%)"
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
+# --------------------
+# TOP: MARKET PULSE + AI BUBBLE ALERT
+# --------------------
+st.markdown("## 🧭 Market Pulse & AI Bubble Monitor")
 
-with col3:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric(
-        "Nasdaq",
-        f"{market_data['indices']['Nasdaq']['price']:,.2f}",
-        f"{market_data['indices']['Nasdaq']['change']:.2f} ({market_data['indices']['Nasdaq']['change_pct']:.2f}%)"
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
+c1, c2, c3, c4, c5 = st.columns(5)
+cards = [c1, c2, c3, c4, c5]
 
-with col4:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric(
-        "VIX (Fear Index)",
-        f"{market_data['indices']['VIX']['price']:.2f}",
-        f"+{market_data['indices']['VIX']['change_pct']:.1f}% ⚠️"
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# ============================================================================
-# QUANTUMFLOW MVP: 4-EXPERT ANALYSIS
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">🤖 QuantumFlow 4-Expert MVP Analysis</h2>', unsafe_allow_html=True)
-
-# Expert Analysis based on current market conditions
-expert_analysis = {
-    'Market Regime Detector': {
-        'signal': -0.72,
-        'regime': 'HIGH VOLATILITY / TRANSITION',
-        'confidence': 85,
-        'details': 'HMM detecting regime shift from Bull to High Volatility. VIX spike +13% confirms instability. Probability of bear regime: 68%',
-        'color': '#ff6b6b'
-    },
-    'Technical Pattern Expert': {
-        'signal': -0.45,
-        'pattern': 'DESCENDING TRIANGLE',
-        'confidence': 72,
-        'details': 'CNN detected bearish continuation pattern on SPX. Support at 6650 critical. RSI oversold on 60% of tech stocks.',
-        'color': '#ffd93d'
-    },
-    '3-Layer Sentiment Expert': {
-        'signal': -0.83,
-        'layers': {
-            'News Sentiment': -0.91,
-            'Contrarian Signal': 0.25,
-            'Institutional Flow': -0.68
-        },
-        'confidence': 91,
-        'details': 'Extreme negative news sentiment on AI bubble. Contrarian indicator slightly positive. Heavy institutional selling detected.',
-        'color': '#ff3838'
-    },
-    'Risk Guardian': {
-        'signal': -0.88,
-        'var_95': 4.2,
-        'max_position': 2.5,
-        'confidence': 94,
-        'details': 'Critical risk levels. VaR at 4.2% (95% confidence). Recommend max 2.5% position sizing. Tail risk elevated.',
-        'color': '#ff0000'
-    }
-}
-
-col1, col2 = st.columns(2)
-
-with col1:
-    for expert in list(expert_analysis.keys())[:2]:
-        data = expert_analysis[expert]
-        st.markdown(f"""
-        <div class="expert-card" style="border-left-color: {data['color']};">
-            <h4 style="color: {data['color']}; margin-bottom: 10px;">{expert}</h4>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #888;">Signal:</span>
-                <span style="color: {'#ff3838' if data['signal'] < 0 else '#00ff00'}; font-weight: bold;">
-                    {data['signal']:+.2f}
-                </span>
+for card, (_, row) in zip(cards, market_overview.iterrows()):
+    with card:
+        change_color = SUCCESS if row["DailyChangePct"] > 0 else DANGER
+        st.markdown(
+            f"""
+            <div class="metric-card">
+                <div style="font-size:0.9rem; color:#9CA3AF;">{row['Type']}</div>
+                <div style="font-size:1.2rem; font-weight:600; margin-top:2px;">{row['Asset']}</div>
+                <div style="font-size:1.0rem; margin-top:4px;">
+                    Level: <b>{row['Level']}</b>
+                </div>
+                <div style="font-size:0.95rem; margin-top:4px; color:{change_color};">
+                    {row['DailyChangePct']}% today
+                </div>
+                <div style="font-size:0.8rem; margin-top:2px; color:#A5B4FC;">
+                    YTD: {row['YTD%']}%
+                </div>
+                <div style="font-size:0.75rem; margin-top:6px; color:#9CA3AF;">
+                    {row['Comment']}
+                </div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #888;">Confidence:</span>
-                <span style="color: white; font-weight: bold;">{data['confidence']}%</span>
-            </div>
-            <p style="color: #ccc; font-size: 0.9rem; margin-top: 10px;">{data['details']}</p>
-        </div>
-        """, unsafe_allow_html=True)
+            """,
+            unsafe_allow_html=True
+        )
 
-with col2:
-    for expert in list(expert_analysis.keys())[2:]:
-        data = expert_analysis[expert]
-        st.markdown(f"""
-        <div class="expert-card" style="border-left-color: {data['color']};">
-            <h4 style="color: {data['color']}; margin-bottom: 10px;">{expert}</h4>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #888;">Signal:</span>
-                <span style="color: {'#ff3838' if data['signal'] < 0 else '#00ff00'}; font-weight: bold;">
-                    {data['signal']:+.2f}
-                </span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #888;">Confidence:</span>
-                <span style="color: white; font-weight: bold;">{data['confidence']}%</span>
-            </div>
-            <p style="color: #ccc; font-size: 0.9rem; margin-top: 10px;">{data['details']}</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ============================================================================
-# DECISION ENGINE FINAL OUTPUT
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">🎯 Decision Engine Final Analysis</h2>', unsafe_allow_html=True)
-
-# Calculate weighted decision
-weights = {'Market Regime': 0.25, 'Technical': 0.20, 'Sentiment': 0.35, 'Risk': 0.20}
-final_signal = (-0.72 * 0.25) + (-0.45 * 0.20) + (-0.83 * 0.35) + (-0.88 * 0.20)
-final_signal = -0.737  # Weighted average
-
-decision = "STRONG SELL / RISK OFF"
-confidence = 86
-
-st.markdown(f"""
-<div class="decision-box">
-    <div class="decision-text">{decision}</div>
-    <div style="margin-top: 20px;">
-        <div style="font-size: 1.5rem; color: #ff3838; margin-bottom: 10px;">
-            Composite Signal: {final_signal:.3f}
-        </div>
-        <div style="font-size: 1.3rem; color: white;">
-            Confidence: {confidence}%
-        </div>
+# AI Bubble Alert box
+st.markdown(
+    """
+    <div class="alert-box">
+        <h3>⚠️ AI Bubble Stress: Elevated</h3>
+        <p style="margin-top:6px; font-size:0.95rem;">
+        Tech-heavy indices have logged multiple down days as investors question AI valuations,
+        trim exposure to the Magnificent 7, and wait for Nvidia's high-stakes earnings release.
+        QuantumFlow flags: <b>reduce concentration risk</b>, rotate part of gains into gold,
+        quality energy and defensive sectors, and avoid oversized single-name bets.
+        </p>
     </div>
-    <div style="margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px;">
-        <h4 style="color: #00d4ff; margin-bottom: 15px;">📊 Actionable Recommendations:</h4>
-        <ul style="text-align: left; color: #ccc; line-height: 1.8; font-size: 1.05rem;">
-            <li><strong>Immediate:</strong> Reduce tech exposure by 50%, especially AI-related positions</li>
-            <li><strong>NVDA Strategy:</strong> Wait for earnings. If miss or weak guidance → potential -15% move</li>
-            <li><strong>Defensive Positioning:</strong> Rotate into utilities, healthcare, consumer staples</li>
-            <li><strong>Position Sizing:</strong> Max 2.5% per position, total portfolio risk < 10%</li>
-            <li><strong>Hedging:</strong> Consider VIX calls or SPX puts for downside protection</li>
-            <li><strong>Cash Allocation:</strong> Increase to 35-40% for opportunity buying</li>
-        </ul>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
-# ============================================================================
-# AI STOCKS ANALYSIS
-# ============================================================================
+# --------------------
+# MAGNIFICENT 7 – RISK & OPPORTUNITY
+# --------------------
+st.markdown("## 🌌 Magnificent 7 – Risk & Opportunity Map")
 
-st.markdown('<h2 class="sub-header">💎 Magnificent 7 Real-Time Analysis</h2>', unsafe_allow_html=True)
+left, right = st.columns([2, 3])
 
-mag7_df = pd.DataFrame([
-    {
-        'Symbol': 'NVDA',
-        'Price': '$183.15',
-        'Change': '-1.88%',
-        'P/E': 55,
-        'AI Exposure': '100%',
-        'Risk Level': 'EXTREME',
-        'Signal': 'SELL',
-        'Note': 'Earnings Wednesday - Make or break moment'
-    },
-    {
-        'Symbol': 'MSFT',
-        'Price': '$504.82',
-        'Change': '-0.53%',
-        'P/E': 36,
-        'AI Exposure': '35%',
-        'Risk Level': 'HIGH',
-        'Signal': 'HOLD',
-        'Note': 'Azure AI growing but valuation stretched'
-    },
-    {
-        'Symbol': 'GOOGL',
-        'Price': '$291.35',
-        'Change': '+3.11%',
-        'P/E': 28,
-        'AI Exposure': '40%',
-        'Risk Level': 'MEDIUM',
-        'Signal': 'HOLD',
-        'Note': 'Buffett bought $5B position - defensive AI play'
-    },
-    {
-        'Symbol': 'META',
-        'Price': '$594.67',
-        'Change': '-1.22%',
-        'P/E': 24,
-        'AI Exposure': '30%',
-        'Risk Level': 'MEDIUM',
-        'Signal': 'HOLD',
-        'Note': 'Best performer YTD in Mag7, AI capex concerns'
-    },
-    {
-        'Symbol': 'AAPL',
-        'Price': '$262.45',
-        'Change': '-1.82%',
-        'P/E': 31,
-        'AI Exposure': '15%',
-        'Risk Level': 'LOW',
-        'Signal': 'BUY',
-        'Note': 'Defensive tech play, limited AI exposure'
-    },
-    {
-        'Symbol': 'TSLA',
-        'Price': '$413.25',
-        'Change': '+1.13%',
-        'P/E': 89,
-        'AI Exposure': '25%',
-        'Risk Level': 'HIGH',
-        'Signal': 'AVOID',
-        'Note': 'FSD promises vs reality gap widening'
-    },
-    {
-        'Symbol': 'AMZN',
-        'Price': '$231.05',
-        'Change': '-0.78%',
-        'P/E': 42,
-        'AI Exposure': '20%',
-        'Risk Level': 'MEDIUM',
-        'Signal': 'HOLD',
-        'Note': 'AWS AI services growing, retail defensive'
-    }
-])
+with left:
+    st.markdown("#### Per-stock Signals")
+    st.dataframe(
+        mag7_data.style.background_gradient(
+            subset=["Daily%"], cmap="RdYlGn"
+        ).format(
+            {"Price": "${:,.2f}", "Daily%": "{:+.2f}%", "YTD%": "{:+.1f}%"}
+        ),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+with right:
+    st.markdown("#### Daily Move vs YTD Performance")
+    fig_mag7 = go.Figure()
+    fig_mag7.add_trace(go.Bar(
+        x=mag7_data["Ticker"],
+        y=mag7_data["Daily%"],
+        name="Daily %",
+        marker_line_width=0,
+    ))
+    fig_mag7.add_trace(go.Scatter(
+        x=mag7_data["Ticker"],
+        y=mag7_data["YTD%"],
+        mode="lines+markers",
+        name="YTD %",
+        yaxis="y2"
+    ))
+    fig_mag7.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#020617",
+        height=340,
+        margin=dict(l=40, r=40, t=40, b=40),
+        yaxis=dict(title="Daily % move"),
+        yaxis2=dict(
+            title="YTD %",
+            overlaying="y",
+            side="right",
+        ),
+        legend=dict(orientation="h", y=1.15),
+    )
+    st.plotly_chart(fig_mag7, use_container_width=True)
+
+st.markdown(
+    """
+    <p style="color:#9CA3AF; font-size:0.9rem; margin-top:-10px;">
+    QuantumFlow treats the Magnificent 7 as a <b>crowded macro factor</b>, not just 7 tickers.
+    When crowding + volatility + stretched YTD gains align, the engine shifts from
+    “chasing AI beta” to “protecting capital and reallocating intelligently”.
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
+
+# --------------------
+# ALTERNATIVE PLAYS WHEN TECH IS SHAKY
+# --------------------
+if focus_alt:
+    st.markdown("## 🛡️ Alternatives When AI & Tech Sell Off")
+
+    col_alt_table, col_alt_chart = st.columns([2, 2])
+
+    with col_alt_table:
+        st.markdown("#### Defensive & Rotational Ideas")
+        st.dataframe(
+            alts_data.style.format(
+                {
+                    "SuggestedSize%": "{:.1f}%",
+                    "StopLoss%": "{:.1f}%",
+                    "TakeProfit%": "{:.1f}%"
+                }
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    with col_alt_chart:
+        st.markdown("#### Suggested Allocation by Theme")
+        fig_alloc = px.bar(
+            alts_data,
+            x="Theme",
+            y="SuggestedSize%",
+            color="QF_Signal",
+            title="Suggested slice of portfolio by theme (before risk-profile adjustment)",
+        )
+        fig_alloc.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="#020617",
+            height=340,
+            margin=dict(l=40, r=40, t=40, b=40),
+        )
+        st.plotly_chart(fig_alloc, use_container_width=True)
+
+# --------------------
+# TRADE IDEAS – HOW THE ENGINE TALKS TO THE USER
+# --------------------
+st.markdown("## 🎯 QuantumFlow Trade Ideas (Demo)")
+
+st.markdown(
+    f"""
+    <p style="color:#9CA3AF; font-size:0.9rem;">
+    Based on your selected risk profile (<b>{risk_profile}</b>) and current market regime,
+    QuantumFlow would size trades differently. Below you see position sizes already adjusted
+    by a risk multiplier, assuming a portfolio of <b>${capital:,.0f}</b>.
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
+
+trade_ideas_view = trade_ideas.copy()
+trade_ideas_view["NominalSize($)"] = (trade_ideas_view["AdjPositionSize"] * capital).round(0)
+trade_ideas_view["AdjPositionSize%"] = (trade_ideas_view["AdjPositionSize"] * 100).round(1)
 
 st.dataframe(
-    mag7_df,
-    use_container_width=True,
-    hide_index=True,
-    column_config={
-        "Risk Level": st.column_config.TextColumn(
-            "Risk Level",
-            help="AI bubble exposure risk"
-        ),
-        "Signal": st.column_config.TextColumn(
-            "Signal",
-            help="QuantumFlow recommendation"
-        )
-    }
-)
-
-# ============================================================================
-# MARKET SENTIMENT VISUALIZATIONS
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">📊 Advanced Market Analytics</h2>', unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-
-with col1:
-    # Fear & Greed Gauge - Simplified version
-    fig_gauge = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = 22,
-        title = {'text': "Fear & Greed Index", 'font': {'size': 18, 'color': 'white'}},
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        gauge = {
-            'axis': {'range': [0, 100], 'tickcolor': "white"},
-            'bar': {'color': "#ff3838"},
-            'bgcolor': "rgba(0,0,0,0)",
-            'borderwidth': 2,
-            'bordercolor': "white",
-            'steps': [
-                {'range': [0, 25], 'color': '#8B0000'},
-                {'range': [25, 50], 'color': '#ff3838'},
-                {'range': [50, 75], 'color': '#ffd700'},
-                {'range': [75, 100], 'color': '#00ff00'}
-            ],
-            'threshold': {
-                'line': {'color': "white", 'width': 4},
-                'thickness': 0.75,
-                'value': 22
-            }
+    trade_ideas_view[["Ticker", "Action", "Reason", "AdjPositionSize%", "NominalSize($)", "StopLoss%", "TakeProfit%"]]
+    .rename(columns={
+        "AdjPositionSize%": "Position Size (%)",
+        "NominalSize($)": "Approx. Capital",
+    })
+    .style.format(
+        {
+            "Position Size (%)": "{:.1f}%",
+            "Approx. Capital": "${:,.0f}",
+            "StopLoss%": "{:.1f}%",
+            "TakeProfit%": "{:.1f}%",
         }
-    ))
-
-    fig_gauge.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "white", 'family': "Inter"},
-        height=300,
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-
-    st.plotly_chart(fig_gauge, use_container_width=True)
-
-with col2:
-    # Sector Performance Heatmap
-    sectors = ['Tech', 'Finance', 'Healthcare', 'Energy', 'Consumer', 'Industrials']
-    performance = [-5.2, -3.1, 1.2, -2.8, 0.5, -1.9]
-
-    fig_sectors = go.Figure(data=go.Bar(
-        x=performance,
-        y=sectors,
-        orientation='h',
-        marker=dict(
-            color=performance,
-            colorscale='RdYlGn',
-            cmin=-6,
-            cmax=2,
-            showscale=True,
-            colorbar=dict(
-                title="Performance %",
-                titlefont=dict(color='white'),
-                tickfont=dict(color='white')
-            )
-        ),
-        text=[f'{p:+.1f}%' for p in performance],
-        textposition='outside',
-        textfont=dict(color='white', size=12)
-    ))
-
-    fig_sectors.update_layout(
-        title="Sector Performance Today",
-        title_font=dict(size=20, color='white'),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "white", 'family': "Inter"},
-        height=300,
-        xaxis=dict(
-            showgrid=True,
-            gridcolor='rgba(255,255,255,0.1)',
-            title="Performance (%)",
-            titlefont=dict(color='white')
-        ),
-        yaxis=dict(
-            showgrid=False,
-            titlefont=dict(color='white')
-        )
-    )
-
-    st.plotly_chart(fig_sectors, use_container_width=True)
-
-# ============================================================================
-# AI BUBBLE METRICS DASHBOARD
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">🎈 AI Bubble Indicators</h2>', unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    # AI Stock Valuations
-    ai_valuations = pd.DataFrame({
-        'Metric': ['NVDA P/E vs 5Y Avg', 'AI Sector P/S', 'Price/Book AI', 'EV/Revenue'],
-        'Current': [55, 12.5, 18.2, 22.3],
-        'Historical': [32, 5.2, 8.1, 9.5],
-        'Status': ['🔴 Extreme', '🔴 Extreme', '🟡 High', '🔴 Extreme']
-    })
-    st.markdown("### Valuation Metrics")
-    st.dataframe(ai_valuations, use_container_width=True, hide_index=True)
-
-with col2:
-    # Sentiment Indicators
-    sentiment_data = pd.DataFrame({
-        'Source': ['News Sentiment', 'Social Media', 'Analyst Ratings', 'Insider Selling'],
-        'Score': [-0.91, -0.72, -0.45, -0.88],
-        'Signal': ['Extreme Fear', 'High Fear', 'Caution', 'Heavy Selling']
-    })
-    st.markdown("### Sentiment Analysis")
-    st.dataframe(sentiment_data, use_container_width=True, hide_index=True)
-
-with col3:
-    # Risk Indicators
-    risk_metrics = pd.DataFrame({
-        'Risk Factor': ['Concentration', 'Leverage', 'Volatility', 'Correlation'],
-        'Level': ['95%', '3.2x', '42%', '0.89'],
-        'Warning': ['🔴 Critical', '🟡 High', '🔴 Extreme', '🔴 Extreme']
-    })
-    st.markdown("### Risk Metrics")
-    st.dataframe(risk_metrics, use_container_width=True, hide_index=True)
-
-# ============================================================================
-# TIME SERIES PREDICTION
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">📈 QuantumFlow Predictions</h2>', unsafe_allow_html=True)
-
-# Generate prediction data
-dates = pd.date_range(start='2025-11-11', end='2025-11-25', freq='D')
-historical = [6850, 6820, 6790, 6750, 6720, 6690, 6672, 6672]
-predicted = [6672, 6640, 6600, 6550, 6520, 6580, 6620, 6650, 6680, 6700, 6720, 6740, 6760, 6780, 6800]
-
-fig_pred = go.Figure()
-
-# Historical data
-fig_pred.add_trace(go.Scatter(
-    x=dates[:8],
-    y=historical,
-    mode='lines+markers',
-    name='Historical',
-    line=dict(color='#00d4ff', width=3),
-    marker=dict(size=8, color='#00d4ff')
-))
-
-# Predictions
-fig_pred.add_trace(go.Scatter(
-    x=dates[7:],
-    y=predicted[7:],
-    mode='lines+markers',
-    name='QuantumFlow Prediction',
-    line=dict(color='#ff6b6b', width=2, dash='dash'),
-    marker=dict(size=8, color='#ff6b6b')
-))
-
-# Confidence bands
-upper_band = [p * 1.02 for p in predicted[7:]]
-lower_band = [p * 0.98 for p in predicted[7:]]
-
-fig_pred.add_trace(go.Scatter(
-    x=dates[7:],
-    y=upper_band,
-    mode='lines',
-    name='Upper Confidence',
-    line=dict(width=0),
-    showlegend=False
-))
-
-fig_pred.add_trace(go.Scatter(
-    x=dates[7:],
-    y=lower_band,
-    mode='lines',
-    name='Lower Confidence',
-    line=dict(width=0),
-    fill='tonexty',
-    fillcolor='rgba(255,107,107,0.2)',
-    showlegend=False
-))
-
-# NVDA Earnings marker
-fig_pred.add_annotation(
-    x=dates[10],  # Nov 20
-    y=6520,
-    text="NVDA<br>Earnings",
-    showarrow=True,
-    arrowhead=2,
-    arrowsize=1,
-    arrowwidth=2,
-    arrowcolor="#ff3838",
-    ax=0,
-    ay=-40,
-    bgcolor="rgba(255,0,0,0.2)",
-    bordercolor="#ff3838",
-    borderwidth=2,
-    font=dict(color="white", size=12)
-)
-
-fig_pred.update_layout(
-    title="S&P 500 Prediction with NVDA Earnings Impact",
-    title_font=dict(size=20, color='white'),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0.1)",
-    font={'color': "white", 'family': "Inter"},
-    height=400,
-    xaxis=dict(
-        showgrid=True,
-        gridcolor='rgba(255,255,255,0.1)',
-        title="Date",
-        titlefont=dict(color='white')
     ),
-    yaxis=dict(
-        showgrid=True,
-        gridcolor='rgba(255,255,255,0.1)',
-        title="S&P 500 Index",
-        titlefont=dict(color='white')
-    ),
-    legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1,
-        font=dict(color='white')
-    )
-)
-
-st.plotly_chart(fig_pred, use_container_width=True)
-
-# ============================================================================
-# SCENARIO ANALYSIS
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">🎭 Scenario Analysis: NVDA Earnings Impact</h2>', unsafe_allow_html=True)
-
-scenarios = pd.DataFrame({
-    'Scenario': [
-        '🚀 Beat & Raise',
-        '✅ Meet Expectations',
-        '⚠️ Meet but Weak Guide',
-        '🔴 Miss Revenue',
-        '💀 Miss & Cut Guide'
-    ],
-    'Probability': ['15%', '25%', '35%', '20%', '5%'],
-    'NVDA Move': ['+8-12%', '+2-3%', '-5-8%', '-10-15%', '-20-25%'],
-    'S&P Impact': ['+1.5%', '+0.3%', '-1.0%', '-2.0%', '-3.5%'],
-    'Tech Sector': ['+3-4%', '+0.5%', '-2-3%', '-4-5%', '-7-8%'],
-    'QuantumFlow Action': [
-        'Add Tech gradually',
-        'Hold positions',
-        'Reduce 25%',
-        'Reduce 50%',
-        'Full Risk-Off'
-    ]
-})
-
-st.dataframe(
-    scenarios,
     use_container_width=True,
     hide_index=True,
-    column_config={
-        "Scenario": st.column_config.TextColumn("Scenario", width="medium"),
-        "Probability": st.column_config.TextColumn("Probability", width="small"),
-        "NVDA Move": st.column_config.TextColumn("NVDA Move", width="small"),
-        "S&P Impact": st.column_config.TextColumn("S&P Impact", width="small"),
-        "Tech Sector": st.column_config.TextColumn("Tech Sector", width="small"),
-        "QuantumFlow Action": st.column_config.TextColumn("Action", width="medium")
-    }
 )
 
-# ============================================================================
-# KEY INSIGHTS
-# ============================================================================
-
-st.markdown('<h2 class="sub-header">🔍 Senior Analyst Key Insights</h2>', unsafe_allow_html=True)
-
-insights_html = """
-<div style="background: linear-gradient(135deg, rgba(0,150,255,0.1) 0%, rgba(0,100,255,0.05) 100%); 
-            border: 1px solid rgba(0,150,255,0.3); border-radius: 15px; padding: 25px; margin: 20px 0;">
-    <h3 style="color: #00d4ff; margin-bottom: 20px;">📝 Executive Summary - November 18, 2025</h3>
-    
-    <div style="margin-bottom: 20px;">
-        <h4 style="color: #ff6b6b; margin-bottom: 10px;">1. AI Bubble at Critical Juncture</h4>
-        <p style="color: #ccc; line-height: 1.6;">
-            The confluence of factors - Pichai's warning, major investor exits (SoftBank, Thiel), and NVDA's 55x P/E - 
-            suggests we're at a pivotal moment. The market is pricing in perfection for NVDA earnings. Any disappointment 
-            could trigger a 15-20% correction in AI stocks and potentially mark the beginning of a sector rotation.
-        </p>
-    </div>
-    
-    <div style="margin-bottom: 20px;">
-        <h4 style="color: #ff6b6b; margin-bottom: 10px;">2. Technical Breakdown Imminent</h4>
-        <p style="color: #ccc; line-height: 1.6;">
-            S&P 500 testing critical support at 6650. Break below would target 6500 (-2.5% additional downside). 
-            VIX spike to 18.47 (+13%) confirms institutional hedging. Breadth deteriorating with only 30% of stocks 
-            above 50-day MA. Classic distribution pattern forming.
-        </p>
-    </div>
-    
-    <div style="margin-bottom: 20px;">
-        <h4 style="color: #ff6b6b; margin-bottom: 10px;">3. Sentiment at Extreme Fear</h4>
-        <p style="color: #ccc; line-height: 1.6;">
-            Our 3-Layer Sentiment Expert shows -0.83 composite score, the lowest since March 2023. However, 
-            contrarian indicator slightly positive (+0.25), suggesting potential for sharp relief rally if NVDA 
-            surprises positively. But risk/reward favors defensive positioning.
-        </p>
-    </div>
-    
-    <div style="margin-bottom: 20px;">
-        <h4 style="color: #ff6b6b; margin-bottom: 10px;">4. Portfolio Strategy</h4>
-        <p style="color: #ccc; line-height: 1.6;">
-            <strong>Immediate Actions:</strong><br>
-            • Reduce tech exposure to 15-20% of portfolio (from typical 30-35%)<br>
-            • Increase cash to 35-40% for opportunistic buying<br>
-            • Initiate hedges: SPX 6600 puts, VIX 20 calls<br>
-            • Rotate into: Healthcare (JNJ, UNH), Utilities (NEE), Consumer Staples (PG, KO)<br>
-            • Wait for NVDA earnings before any tech re-entry
-        </p>
-    </div>
-    
-    <div style="margin-bottom: 20px;">
-        <h4 style="color: #00ff00; margin-bottom: 10px;">5. Opportunities in the Chaos</h4>
-        <p style="color: #ccc; line-height: 1.6;">
-            • GOOGL showing relative strength (+3.11%) with Buffett backing<br>
-            • AAPL at attractive valuations for long-term accumulation below $260<br>
-            • Small-cap value stocks (IWN) showing positive divergence<br>
-            • Gold miners (GDX) breaking out as safe haven play<br>
-            • Energy sector (XLE) oversold, potential bounce candidate
-        </p>
-    </div>
-    
-    <div style="background: rgba(255,200,0,0.1); border: 1px solid rgba(255,200,0,0.3); 
-                border-radius: 10px; padding: 15px; margin-top: 20px;">
-        <h4 style="color: #ffd700; margin-bottom: 10px;">⚡ The Bottom Line</h4>
-        <p style="color: white; font-size: 1.1rem; line-height: 1.6;">
-            This is NOT the time for heroics. The risk/reward is heavily skewed to the downside until NVDA reports. 
-            Our Decision Engine's STRONG SELL signal with 86% confidence is rare and should be respected. 
-            Preserve capital now, hunt for bargains after the dust settles. The next 72 hours will likely 
-            determine market direction through year-end.
-        </p>
-    </div>
-</div>
-"""
-
-st.markdown(insights_html, unsafe_allow_html=True)
-
-# ============================================================================
-# FOOTER
-# ============================================================================
-
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; padding: 20px; color: #888;">
-    <p style="font-size: 1.1rem; margin-bottom: 10px;">
-        🔮 <strong>QuantumFlow AI Trading Intelligence</strong> | November 18, 2025
+st.markdown(
+    """
+    <p style="color:#6B7280; font-size:0.85rem; margin-top:8px;">
+    In the full product, each idea comes from the multi-expert Decision Engine:
+    news momentum, technical setup, market regime and risk module all contribute
+    weighted opinions. For this demo, we show how the final output looks and feels
+    to a sophisticated retail investor who wants clear, explainable, risk-aware actions.
     </p>
-    <p style="font-size: 0.9rem;">
-        Powered by 4-Expert MVP Architecture | Real-Time Market Analysis | Patent Pending
-    </p>
-    <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">
-        <em>Disclaimer: This is for informational purposes only. Not financial advice. 
-        Past performance does not guarantee future results.</em>
-    </p>
-</div>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
-# Sidebar Configuration
-with st.sidebar:
-    st.markdown("### ⚙️ Control Panel")
+# --------------------
+# EXPLAINABILITY PANEL
+# --------------------
+st.markdown("## 🧠 Why This Changes the Game for Retail Investors")
 
-    st.markdown("#### Risk Tolerance")
-    risk_level = st.select_slider(
-        "Select Risk Level",
-        options=["Conservative", "Moderate", "Aggressive"],
-        value="Moderate"
-    )
-
-    st.markdown("#### Time Horizon")
-    time_horizon = st.radio(
-        "Investment Horizon",
-        ["Day Trading", "Swing (1-4 weeks)", "Position (1-6 months)", "Long-term (>6 months)"],
-        index=1
-    )
-
-    st.markdown("#### Alert Thresholds")
-    vix_threshold = st.slider("VIX Alert Level", 15, 40, 20)
-    drawdown_threshold = st.slider("Max Drawdown %", 5, 25, 10)
-
-    st.markdown("---")
-
-    st.markdown("### 📊 Quick Stats")
-    st.metric("Active Signals", "4")
-    st.metric("Win Rate (30d)", "68%")
-    st.metric("Sharpe Ratio", "1.82")
-    st.metric("Max Drawdown", "-4.2%")
-
-    st.markdown("---")
-
-    st.markdown("### 🔄 Last Update")
-    st.info("November 18, 2025 - 2:30 PM EST")
-
-    if st.button("🔄 Refresh Data", use_container_width=True):
-        st.rerun()
+st.markdown(
+    """
+    - 🔎 **From Noise to Narrative** – Instead of endless charts and news feeds,
+      QuantumFlow summarizes AI bubble stress, macro regime and sector rotations
+      into a single coherent story for the investor.
+    - 🧩 **Multi-Expert Brain** – Behind each signal stands a News Expert, Technical Expert,
+      Market Regime Expert and Risk Expert – orchestrated into one decision.
+    - 🎯 **Actionable, Not Just Informative** – Every view ends in:
+      what to do, how much to size, where to cut losses, and what alternatives exist.
+    - 🛡️ **Risk-As-First-Class Citizen** – User-defined risk profile drives sizing and
+      asset selection, putting capital protection on par with return.
+    """
+)
