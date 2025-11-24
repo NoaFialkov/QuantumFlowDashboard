@@ -1,5 +1,5 @@
 """
-QuantumFlow AI Trading Intelligence Dashboard - November 23, 2025
+QuantumFlow AI Trading Intelligence Dashboard - November 24, 2025
 Real-time Market Analysis with AI Bubble Warning System
 """
 
@@ -306,8 +306,8 @@ st.markdown(
 
 st.markdown(
     '<p style="text-align: center; color: #888; font-size: 0.8rem;">'
-    'Data snapshot: November 23, 2025 | Simulated but market-aligned data for MVP demo | '
-    'Late-cycle regime analysis | AI Bubble Warning Active</p>',
+    'Data snapshot: November 24, 2025 | Simulated but market-aligned data for MVP demo | '
+    'Late-cycle regime analysis | AI Bubble Risk Elevated</p>',
     unsafe_allow_html=True
 )
 
@@ -318,15 +318,15 @@ with st.sidebar:
     st.markdown("### 🎛️ Scenario Controls")
     regime = st.selectbox(
         "Market Regime",
-        ["Late-cycle, choppy", "AI melt-up", "Post-crash recovery", "Sideways grind"],
+        ["Late-cycle, fragile repair", "AI melt-up", "Post-crash recovery", "Sideways grind"],
         index=0
     )
     risk_appetite = st.slider(
         "Risk Appetite",
         min_value=0.0,
         max_value=1.0,
-        value=0.4,
-        step=0.1
+        value=0.45,
+        step=0.05
     )
     ai_bubble = st.slider(
         "AI Bubble Risk (1–5)",
@@ -356,28 +356,28 @@ with st.sidebar:
     )
 
 # ============================================================================
-# REAL MARKET DATA SNAPSHOT (SIMULATED BUT ALIGNED) - NOVEMBER 23, 2025
+# REAL MARKET DATA SNAPSHOT (SIMULATED BUT ALIGNED) - NOVEMBER 24, 2025
 # ============================================================================
 
 market_data = {
     'indices': {
-        'S&P 500': {'price': 6605.00, 'change': 65.00, 'change_pct': 1.00},
-        'Dow Jones': {'price': 46200.00, 'change': 503.00, 'change_pct': 1.10},
-        'Nasdaq': {'price': 22300.00, 'change': 200.70, 'change_pct': 0.90},
-        'VIX': {'price': 20.10, 'change': 0.50, 'change_pct': 2.55}
+        'S&P 500': {'price': 6620.00, 'change': 33.00, 'change_pct': 0.50},
+        'Dow Jones': {'price': 46350.00, 'change': 185.00, 'change_pct': 0.40},
+        'Nasdaq': {'price': 22420.00, 'change': 134.50, 'change_pct': 0.60},
+        'VIX': {'price': 22.50, 'change': -1.00, 'change_pct': -4.25}
     },
     'stocks': {
-        'NVDA': {'price': 183.15, 'change': -3.52, 'change_pct': -1.88, 'pe': 55, 'market_cap': 4500},
-        'AAPL': {'price': 262.45, 'change': -4.87, 'change_pct': -1.82, 'pe': 31, 'market_cap': 4020},
-        'MSFT': {'price': 504.82, 'change': -2.67, 'change_pct': -0.53, 'pe': 36, 'market_cap': 3750},
-        'GOOGL': {'price': 291.35, 'change': 8.78, 'change_pct': 3.11, 'pe': 28, 'market_cap': 1850},
-        'META': {'price': 594.67, 'change': -7.34, 'change_pct': -1.22, 'pe': 24, 'market_cap': 1520},
-        'TSLA': {'price': 413.25, 'change': 4.63, 'change_pct': 1.13, 'pe': 89, 'market_cap': 1310},
-        'AMZN': {'price': 231.05, 'change': -1.82, 'change_pct': -0.78, 'pe': 42, 'market_cap': 2400}
+        'NVDA': {'price': 184.00, 'change': 0.85, 'change_pct': 0.46, 'pe': 55, 'market_cap': 4500},
+        'AAPL': {'price': 264.00, 'change': 1.55, 'change_pct': 0.59, 'pe': 31, 'market_cap': 4020},
+        'MSFT': {'price': 507.00, 'change': 2.18, 'change_pct': 0.43, 'pe': 36, 'market_cap': 3750},
+        'GOOGL': {'price': 292.50, 'change': 1.15, 'change_pct': 0.40, 'pe': 28, 'market_cap': 1850},
+        'META': {'price': 598.00, 'change': 3.33, 'change_pct': 0.56, 'pe': 24, 'market_cap': 1520},
+        'TSLA': {'price': 417.00, 'change': 3.75, 'change_pct': 0.90, 'pe': 89, 'market_cap': 1310},
+        'AMZN': {'price': 233.00, 'change': 1.95, 'change_pct': 0.85, 'pe': 42, 'market_cap': 2400}
     },
     'crypto': {
-        'BTC': {'price': 86000, 'change': -600, 'change_pct': -0.70},
-        'ETH': {'price': 3100, 'change': -35, 'change_pct': -1.10}
+        'BTC': {'price': 87500, 'change': 1300, 'change_pct': 1.50},
+        'ETH': {'price': 2850, 'change': 20, 'change_pct': 0.70}
     }
 }
 
@@ -385,42 +385,43 @@ market_data = {
 # MACRO ATMOSPHERE & GLOBAL MOOD SNAPSHOT
 # ============================================================================
 
-# Global market regime snapshot based on November 23, 2025 conditions
+# Global market regime snapshot based on November 24, 2025 conditions
 market_regime = {
-    "name": "Late-cycle, choppy risk-mixed tape",
-    "risk_level": "Elevated but not in panic",
-    "volatility": "High in mega-cap growth and crypto; moderate in defensive sectors",
+    "name": "Late-cycle, fragile repair rally",
+    "risk_level": "Elevated but improving",
+    "volatility": "Elevated in tech and crypto; easing from last week’s extremes",
     "comment": (
-        "After a volatile week with sharp swings in AI and crypto, U.S. equities have "
-        "stabilized into the weekend, but positioning remains cautious and intraday "
-        "reversals are common."
+        "Global equities are extending Friday&apos;s rebound as traders price in future Fed cuts, "
+        "while crypto is in a fragile repair phase after deep drawdowns. The tone is mildly risk-on "
+        "but remains vulnerable to macro surprises and AI/crypto headline shocks."
     ),
     "ai_bubble_score": 0.75,  # 0–1 scale
 }
 
 global_state = {
-    "global_sentiment_score": -0.3,   # -2 (fear) to +2 (euphoria)
+    "global_sentiment_score": -0.2,   # -2 (fear) to +2 (euphoria)
     "volatility_regime": "high",
-    "market_risk_mode": "mixed",
+    "market_risk_mode": "mild risk-on",
     "ai_bubble_risk": 4,  # 1–5 scale
     "key_narratives": [
-        "AI valuations remain stretched: very strong earnings in AI/semis are not always "
-        "translating into higher prices, reinforcing worries about an expensive, "
-        "concentrated AI trade.",
-        "Fed path uncertainty: mixed macro data keeps the market torn between imminent "
-        "rate cuts and a 'higher for longer' scenario, pressuring duration, growth and crypto.",
-        "Rotation out of crypto: ETF outflows and futures deleveraging in BTC/ETH signal "
-        "risk reduction specific to crypto, while U.S. equities still see net inflows.",
-        "Oil drifting lower despite geopolitical risk eases near-term inflation pressure, "
-        "but also reflects rising worries about global growth."
+        "AI / mega-cap tech repricing: concerns about an 'AI bubble' persist as stretched valuations "
+        "meet higher volatility and big intraday reversals in US tech indices.",
+        "Rate-cut expectations vs. sticky inflation: markets are trying to front-run Fed easing, but "
+        "upcoming US inflation and growth data can quickly swing probabilities and risk appetite.",
+        "Crypto leverage washout: a 20–30% drawdown from Bitcoin&apos;s peak and large ETF outflows "
+        "highlight a classic de-leveraging phase with sentiment still fragile.",
+        "China / Asia fragility: Hong Kong suffers its worst week since April while China growth worries "
+        "weigh on regional risk sentiment even as Japan and India hold up better.",
+        "Cross-asset divergence: US and some DM indices sit near highs while cyclicals, small caps and parts "
+        "of EM lag, underscoring narrow leadership and vulnerability if AI or US macro disappoint."
     ],
     "today_takeaways": [
-        "Volatility remains elevated across assets, with equities trying to stabilize "
-        "after a week of sharp corrections, especially in growth and AI.",
-        "Crypto continues to experience de-leveraging and ETF outflows, leaving BTC and "
-        "ETH well below earlier 2025 highs.",
-        "Every macro data release or central bank speech is a potential volatility spark "
-        "while the narrative stays 'strong data but an uncertain Fed path'."
+        "Use a tactical, not heroic, risk stance: volatility is still elevated and this week is dense with "
+        "macro data; favor smaller position sizes and tighter risk controls.",
+        "Lean into quality over story-beta: in equities, prefer strong balance sheets and earnings visibility "
+        "over the most speculative AI or long-duration names; in crypto, tilt BTC-over-alts.",
+        "Respect crypto and tech volatility: both AI leaders and major coins can move 5–10%+ around catalysts; "
+        "intraday reversals and stop cascades remain key P&L drivers."
     ],
 }
 
@@ -458,7 +459,7 @@ with col_mood:
     )
     sub_col1, sub_col2 = st.columns(2)
     with sub_col1:
-        st.metric("Global sentiment", f"{global_state['global_sentiment_score']:+.1f}", "Slight fear")
+        st.metric("Global sentiment", f"{global_state['global_sentiment_score']:+.1f}", "Mild fear")
         st.metric("Volatility regime", global_state['volatility_regime'].capitalize())
     with sub_col2:
         st.metric("Market risk mode", global_state['market_risk_mode'].capitalize())
@@ -496,12 +497,12 @@ st.markdown(takeaways_html, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="alert-box">
-    <div class="alert-title">🚨 CRITICAL MARKET ALERT: AI BUBBLE FEARS INTENSIFY</div>
+    <div class="alert-title">🚨 CRITICAL MARKET ALERT: AI BUBBLE RISKS PERSIST</div>
     <ul style="color: #ff9999; font-size: 1.1rem; line-height: 1.8;">
-        <li><strong>Stretched AI valuations:</strong> Mega-cap AI and semis show very strong earnings, but price action is increasingly choppy and de-linked from fundamentals.</li>
-        <li><strong>Bubble risk elevated:</strong> Flows remain concentrated in a narrow cluster of AI leaders, creating asymmetric drawdown risk if sentiment turns.</li>
-        <li><strong>Macro uncertainty:</strong> Confusion around the Fed's path keeps discount rates, valuations and risk premia unstable.</li>
-        <li><strong>Cross-asset warning:</strong> Crypto de-leveraging and ETF outflows illustrate how quickly risk appetite can reverse when fear rises.</li>
+        <li><strong>AI valuations still stretched:</strong> Mega-cap AI and semis remain richly valued even after last week&apos;s shakeout.</li>
+        <li><strong>Two-sided price action:</strong> Big intraday reversals show that the AI trade is fragile, not one-way.</li>
+        <li><strong>Macro data minefield:</strong> Upcoming US inflation and activity releases can quickly change the narrative around Fed cuts.</li>
+        <li><strong>Crypto as stress indicator:</strong> The post-liquidation rebound in BTC is encouraging but not yet a new bull phase.</li>
     </ul>
 </div>
 """, unsafe_allow_html=True)
@@ -546,66 +547,67 @@ with col4:
     st.metric(
         "VIX (Fear Index)",
         f"{market_data['indices']['VIX']['price']:.2f}",
-        f"+{market_data['indices']['VIX']['change_pct']:.1f}% ⚠️"
+        f"{market_data['indices']['VIX']['change_pct']:.1f}%"
     )
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================================
-# QUANTUMFLOW MVP: 4-EXPERT ANALYSIS
+# QUANTUMFLOW MVP: 4-EXPERT ANALYSIS (UPDATED TO TODAY'S REGIME)
 # ============================================================================
 
-st.markdown('<h2 class="sub-header">🤖 QuantumFlow 4-Expert Decision Engine (NVDA Focus)</h2>', unsafe_allow_html=True)
+st.markdown('<h2 class="sub-header">🤖 QuantumFlow 4-Expert Decision Lens (AI & NVDA Proxy)</h2>', unsafe_allow_html=True)
 st.markdown(
     "<p style='color:#9ca3af; font-size:0.95rem;'>"
-    "This section demonstrates how four specialized AI experts (News, Technicals, Macro-Regime, Risk) "
-    "converge into one unified trade decision on a key AI stock (NVDA) as a proxy for the AI bubble.</p>",
+    "Instead of a hard-coded Decision Engine, today we use a senior-analyst style synthesis of news, "
+    "technicals, macro regime and risk to frame the AI trade as it stands this morning.</p>",
     unsafe_allow_html=True
 )
 
-# Sample Expert Opinions (Static but realistic and explainable)
 experts_data = [
     {
         "name": "News & Sentiment Expert",
         "role": "LLM + news API scanning headlines, transcripts and social sentiment",
-        "view": "NEGATIVE",
-        "signal": "SELL",
-        "confidence": 0.82,
+        "view": "CAUTIOUS / REPRICING",
+        "signal": "TRIM / UNDERWEIGHT",
+        "confidence": 0.80,
         "rationale": (
-            "Recent headlines highlight bubble fears, valuation concerns and high expectations "
-            "for AI demand. Retail positioning is crowded and options activity is euphoric."
+            "Narratives focus on AI bubble risk and crowded positioning. Headlines describe a fragile "
+            "rebound after last week&apos;s shakeout, not a clean restart of the AI melt-up."
         )
     },
     {
         "name": "Technical Expert",
         "role": "Pattern recognition, trend/momentum, volatility regime detection",
-        "view": "MIXED/REVERSAL",
-        "signal": "SELL RALLIES",
+        "view": "STABILIZING BUT FRAGILE",
+        "signal": "TRADE RANGES, SELL RIPS",
         "confidence": 0.78,
         "rationale": (
-            "Price made a lower high vs. recent peak, momentum is rolling over and realized "
-            "volatility is rising. Distribution days are increasing, suggesting smart money selling into strength."
+            "After a 3%+ drop in the Nasdaq 100, AI leaders are basing but with large intraday ranges. "
+            "Support is holding for now, but failed breakouts and sharp reversals argue for tactical, not heroic, risk."
         )
     },
     {
         "name": "Macro & Regime Expert",
-        "role": "Links NVDA/AI trade to rates, growth expectations and cross-asset flows",
-        "view": "CAUTIOUS",
-        "signal": "UNDERWEIGHT",
+        "role": "Links AI trade to rates, growth expectations and cross-asset flows",
+        "view": "MILD RISK-ON, LATE-CYCLE",
+        "signal": "NEUTRAL TO UNDERWEIGHT",
         "confidence": 0.74,
         "rationale": (
-            "Late-cycle environment with elevated rates and tighter financial conditions makes long-duration "
-            "growth trades vulnerable. Any macro disappointment could hit high-multiple AI names first."
+            "Markets price a high probability of future Fed cuts, but inflation and activity data this week "
+            "can quickly shift that narrative. Late-cycle conditions and high valuations limit upside for "
+            "long-duration, speculative growth."
         )
     },
     {
         "name": "Risk & Positioning Expert",
         "role": "Stop-loss logic, crowding metrics, max drawdown control",
-        "view": "RISK-AVERSE",
-        "signal": "REDUCE EXPOSURE",
-        "confidence": 0.88,
+        "view": "RISK-CONTROLLED",
+        "signal": "KEEP SIZES SMALL",
+        "confidence": 0.86,
         "rationale": (
-            "Positioning is extremely crowded, skew is rich and downside tails are underpriced. "
-            "From a capital preservation standpoint, risk is asymmetric to the downside."
+            "Positioning in mega-cap AI remains heavy even after de-risking. Given elevated volatility in tech "
+            "and crypto, portfolio risk should be managed through smaller position sizes, tighter stops, and "
+            "preference for baskets/ETFs over concentrated single-name bets."
         )
     },
 ]
@@ -614,7 +616,9 @@ col_left, col_right = st.columns([2, 1.4])
 
 with col_left:
     for expert in experts_data:
-        view_color = "#f97373" if expert["view"] in ["NEGATIVE", "RISK-AVERSE"] else "#facc15"
+        view_color = "#facc15"
+        if "CAUTIOUS" in expert["view"] or "RISK" in expert["view"]:
+            view_color = "#f97373"
         st.markdown(
             f"""
             <div class="expert-card">
@@ -632,7 +636,7 @@ with col_left:
                     {expert['rationale']}
                 </div>
                 <div style="margin-top:0.5rem;">
-                    <span class="signal-badge signal-sell">{expert['signal']}</span>
+                    <span class="signal-badge signal-hold">{expert['signal']}</span>
                 </div>
             </div>
             """,
@@ -643,10 +647,11 @@ with col_right:
     st.markdown(
         """
         <div class="metric-card" style="margin-bottom:0.85rem;">
-            <div class="metric-label">ENGINE OUTPUT</div>
-            <div class="metric-value" style="color:#fecaca;">STRONG SELL ⚠️</div>
+            <div class="metric-label">AGGREGATE VIEW</div>
+            <div class="metric-value" style="color:#fed7aa;">CAUTIOUS UNDERWEIGHT</div>
             <div class="metric-subtext" style="margin-top:0.5rem;">
-                4/4 experts aligned on downside risk. Bubble risk elevated, volatility rising.
+                Maintain core exposure to AI leaders but below benchmark weights. Use strength to trim, avoid leverage,
+                and keep room to add only if volatility breaks lower and macro data cooperate.
             </div>
         </div>
         """,
@@ -657,9 +662,10 @@ with col_right:
         """
         <div class="metric-card" style="margin-bottom:0.85rem;">
             <div class="metric-label">RECOMMENDED STANCE</div>
-            <div class="metric-value" style="color:#fed7aa;">UNDERWEIGHT AI LEADERS</div>
+            <div class="metric-value" style="color:#bbf7d0;">QUALITY OVER STORY-BETA</div>
             <div class="metric-subtext" style="margin-top:0.5rem;">
-                Keep core exposure but avoid chasing breakouts. Use rallies to reduce position size.
+                Tilt toward cash-generative, diversified platforms (e.g. broad cloud / software / infra) rather than the
+                most speculative AI narratives. In crypto, prefer BTC over long-tail altcoins.
             </div>
         </div>
         """,
@@ -669,12 +675,12 @@ with col_right:
     st.markdown(
         """
         <div class="metric-card">
-            <div class="metric-label">STOP & POSITIONING</div>
+            <div class="metric-label">RISK IMPLEMENTATION</div>
             <div class="metric-subtext" style="margin-top:0.3rem;">
                 <ul style="padding-left:1.1rem;">
-                    <li>Max single-name allocation: 5–7% of portfolio</li>
-                    <li>Tighten stops below recent support</li>
-                    <li>Prefer baskets/ETFs over concentrated bets</li>
+                    <li>Keep single-name AI exposure &lt; 5–7% per name.</li>
+                    <li>Use options / tighter stops to cap downside in high-vol names.</li>
+                    <li>Favor baskets/ETFs over concentrated bets in this regime.</li>
                 </ul>
             </div>
         </div>
@@ -689,69 +695,68 @@ with col_right:
 ai_watchlist_data = [
     {
         'Symbol': 'NVDA',
-        'Price': '$183.15',
-        'Change': '-1.88%',
+        'Price': '$184.00',
+        'Change': '+0.46%',
         'P/E': 55,
         'AI Exposure': '70%',
         'Risk Level': 'HIGH',
-        'Signal': 'SELL',
-        'Note': 'Crowded AI leader, asymmetric downside risk'
+        'Signal': 'TRIM / UNDERWEIGHT',
+        'Note': 'Fragile rebound after shakeout; still crowded and volatile'
     },
     {
         'Symbol': 'MSFT',
-        'Price': '$504.82',
-        'Change': '-0.53%',
+        'Price': '$507.00',
+        'Change': '+0.43%',
         'P/E': 36,
         'AI Exposure': '60%',
         'Risk Level': 'MEDIUM',
-        'Signal': 'HOLD',
-        'Note': 'Core AI infrastructure, balanced risk-reward'
+        'Signal': 'CORE HOLD',
+        'Note': 'High-quality AI infra & cloud; anchor position rather than trading vehicle'
     },
     {
         'Symbol': 'GOOGL',
-        'Price': '$291.35',
-        'Change': '+3.11%',
+        'Price': '$292.50',
+        'Change': '+0.40%',
         'P/E': 28,
         'AI Exposure': '40%',
         'Risk Level': 'MEDIUM',
         'Signal': 'HOLD',
-        'Note': 'Defensive AI play with strong core ads business'
+        'Note': 'Defensive AI exposure with strong core ads/search business'
     },
     {
         'Symbol': 'META',
-        'Price': '$594.67',
-        'Change': '-1.22%',
+        'Price': '$598.00',
+        'Change': '+0.56%',
         'P/E': 24,
         'AI Exposure': '30%',
         'Risk Level': 'MEDIUM',
         'Signal': 'HOLD',
-        'Note': 'Top performer YTD in Mag7; watching AI capex'
+        'Note': 'Top YTD performer; watch for sentiment shifts around capex and regulation'
     },
     {
         'Symbol': 'TSLA',
-        'Price': '$413.25',
-        'Change': '+1.13%',
+        'Price': '$417.00',
+        'Change': '+0.90%',
         'P/E': 89,
         'AI Exposure': '35%',
         'Risk Level': 'HIGH',
-        'Signal': 'SELL RALLIES',
-        'Note': 'High-multiple story stock with AI/autonomy optionality'
+        'Signal': 'TRADE ONLY, NOT CORE',
+        'Note': 'High-multiple story stock with large optionality but very high volatility'
     },
     {
         'Symbol': 'AMD',
-        'Price': '$176.45',
-        'Change': '-2.05%',
+        'Price': '$178.00',
+        'Change': '+0.88%',
         'P/E': 48,
         'AI Exposure': '50%',
         'Risk Level': 'HIGH',
-        'Signal': 'HOLD / SPEC BUY',
-        'Note': 'Second-derivative AI play; more volatile than NVDA'
+        'Signal': 'SPECULATIVE BUY (SMALL)',
+        'Note': 'Second-derivative AI play; suitable only for small tactical positions'
     },
 ]
 
 ai_watchlist_df = pd.DataFrame(ai_watchlist_data)
 
-# Apply styling for risk & signal columns
 def style_watchlist(df):
     def color_risk(val):
         if val == "HIGH":
@@ -769,7 +774,7 @@ def style_watchlist(df):
         return f"background:{color}; color:{text}; border:1px solid {border}; border-radius:20px; text-align:center;"
 
     def color_signal(val):
-        if "SELL" in val:
+        if "TRIM" in val or "SELL" in val or "TRADE ONLY" in val:
             color = "rgba(248,113,113,0.2)"
             border = "rgba(248,113,113,0.7)"
             text = "#fecaca"
@@ -777,6 +782,10 @@ def style_watchlist(df):
             color = "rgba(34,197,94,0.2)"
             border = "rgba(34,197,94,0.7)"
             text = "#bbf7d0"
+        elif "CORE" in val:
+            color = "rgba(59,130,246,0.2)"
+            border = "rgba(59,130,246,0.7)"
+            text = "#bfdbfe"
         else:
             color = "rgba(59,130,246,0.2)"
             border = "rgba(59,130,246,0.7)"
@@ -797,8 +806,8 @@ def style_watchlist(df):
 st.markdown('<h2 class="sub-header">🧬 AI-Centric Watchlist (Simulation)</h2>', unsafe_allow_html=True)
 st.markdown(
     "<p style='color:#9ca3af; font-size:0.9rem;'>"
-    "Static but realistic snapshot to show how QuantumFlow would highlight crowded AI trades, risk levels "
-    "and engine-generated signals in a production version.</p>",
+    "Static but realistic snapshot to show how QuantumFlow highlights crowded AI trades, risk levels "
+    "and analyst-style signals in today&apos;s regime.</p>",
     unsafe_allow_html=True
 )
 
@@ -808,11 +817,9 @@ st.dataframe(style_watchlist(ai_watchlist_df), use_container_width=True)
 # SIMULATED PREDICTION: S&P 500 PATH UNDER AI BUBBLE STRESS
 # ============================================================================
 
-# We keep dates as a DatetimeIndex but avoid Plotly shapes that try to "average" timestamps
 dates = pd.date_range(datetime(2025, 11, 1), periods=20, freq="D")
 spx_prices = np.linspace(6700, 6550, 20) + np.random.normal(0, 20, 20)
 
-# Simulated stressed future path (downward drift, higher vol)
 future_dates = pd.date_range(dates[-1] + timedelta(days=1), periods=15, freq="D")
 predicted_path = spx_prices[-1] + np.cumsum(np.random.normal(-8, 18, len(future_dates)))
 
@@ -866,52 +873,45 @@ fig_pred.update_layout(
 
 st.markdown('<h2 class="sub-header">📉 S&P 500 Stress Scenario (AI Bubble Unwind)</h2>', unsafe_allow_html=True)
 st.plotly_chart(fig_pred, use_container_width=True)
+
 # ============================================================================
 # EXECUTIVE SUMMARY / INVESTMENT COMMITTEE STYLE VIEW
 # ============================================================================
 
-st.markdown("## 📝 Executive Summary - November 23, 2025")
+st.markdown("## 📝 Executive Summary - November 24, 2025")
 
 st.markdown(
 """
-**1. AI Trade Still Powerful, But Fragile**
+**1. Fragile Repair, Not a New Bull Leg**
 
-Mega-cap AI and semiconductor leaders remain at the heart of the equity rally,  
-but price action has become choppy and increasingly de-linked from fundamentals.  
-Valuations are stretched and the market is highly sensitive to any hint of slowing  
-demand or reduced AI capex. Bubble risk is elevated, but not yet in full unwind mode.
-
----
-
-**2. Macro & Rates: Higher Volatility, Not Full Risk-Off**
-
-Mixed macro data keeps the Fed path uncertain: investors are torn between an imminent  
-rate-cut cycle and a *"higher for longer"* scenario. This uncertainty translates into a  
-**high volatility regime** and a **mixed risk mode** across assets – no clean risk-on  
-or risk-off. Sector rotation dominates: quality, cash flow and balance-sheet strength  
-matter more than chasing every spike.
+Global equities are extending Friday’s rebound and crypto is bouncing off the lows,  
+but AI and major coins are still digesting a sharp de-leveraging phase.  
+Positioning is improving from “panic” to “cautious”, not from “fear” to “euphoria”.
 
 ---
 
-**3. Crypto De-Leveraging & ETF Outflows**
+**2. Macro & Rates: Data-Dependent Risk-On**
 
-Bitcoin and Ethereum have given back a large portion of their 2025 gains as leveraged  
-positions are unwound and ETF flows turn negative. This is more of a **targeted risk  
-reduction in crypto** than a broad-market capitulation – but it highlights how quickly  
-risk appetite can reverse when funding costs are high and narratives crack.
+Markets are trying to front-run a future Fed easing cycle, yet this week’s US inflation  
+and growth prints can easily swing the narrative. Volatility is still elevated and the  
+regime remains late-cycle, which caps the upside for the most speculative growth names.
+
+---
+
+**3. Crypto in Repair Mode**
+
+Bitcoin’s move back above ~87k is best read as a post-liquidation repair rally rather  
+than the start of a fresh bull market. ETF outflows, weaker altcoin performance and  
+still-fragile sentiment argue for a BTC-over-alts stance and disciplined position sizing.
 
 ---
 
 > ⚡ **The Bottom Line**  
-> This is a late-cycle, high-volatility environment with elevated AI bubble risk and  
-> visible stress in crypto. It is a market for **selective risk-taking**, not blind  
-> aggression. QuantumFlow's Decision Engine is designed exactly for this regime:  
-> combine macro, technicals, news flow and risk constraints to size positions  
-> intelligently, lean into high-conviction ideas, and avoid crowded trades where  
-> downside is asymmetric.
+> Today’s environment calls for **tactical, selective risk-taking**: keep exposure to core AI and quality tech,  
+> but below maximum risk levels; prefer balance-sheet strength over pure “story beta”; and in crypto,  
+> treat BTC as the liquid risk proxy while avoiding over-sized bets in long-tail altcoins.
 """
 )
-
 
 # ============================================================================
 # FOOTER / WHY QUANTUMFLOW IS DIFFERENT
@@ -921,7 +921,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="margin-top: 10px; font-size:0.9rem; color:#9ca3af;">
-        🔮 <strong>QuantumFlow AI Trading Intelligence</strong> | November 23, 2025<br>
+        🔮 <strong>QuantumFlow AI Trading Intelligence</strong> | November 24, 2025<br>
         This dashboard is a realistic MVP simulation: the architecture, expert logic and UX are designed
         to scale into a fully-automated system that ingests <em>live</em> macro, cross-asset prices, 
         news &amp; sentiment feeds (including Perplexity-style LLM retrieval), and outputs explainable,
@@ -931,4 +931,4 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.info("November 23, 2025 - 10:00 AM EST | Simulation mode: No real trades executed yet.")
+st.info("November 24, 2025 - 10:00 AM EST | Simulation mode: No real trades executed yet.")
